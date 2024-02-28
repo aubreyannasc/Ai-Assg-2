@@ -1,0 +1,495 @@
+//==============================================================================
+//==============================================================================
+// C++ Application
+//==============================================================================
+//==============================================================================
+
+//region Compiler directives
+
+//==============================================================================
+//==============================================================================
+// Compiler directives
+//==============================================================================
+//==============================================================================
+
+//#pragma clang diagnostic push
+#pragma ide diagnostic ignored "misc-no-recursion"
+#pragma ide diagnostic ignored "modernize-use-nodiscard"
+#pragma ide diagnostic ignored "readability-static-accessed-through-instance"
+
+// #pragma clang diagnostic push
+// Allow scanf int without check
+// #pragma ide diagnostic ignored "cert-err34-c"
+// #pragma clang diagnostic pop
+
+// Disable assert
+// #define NDEBUG
+
+//endregion Compiler directives
+
+//region Notes
+
+//==============================================================================
+//==============================================================================
+// Notes
+//==============================================================================
+//==============================================================================
+
+// g++ -std=c++17 -g -Werror -Wall prg.c -o prg
+
+// Tuple documentation http://www.cplusplus.com/reference/tuple/tuple
+
+// Boost library documentation https://www.boost.org/doc/libs
+
+// Book: The Boost C++ Libraries
+// https://theboostcpplibraries.com
+
+// Boost JSON https://www.boost.org/doc/libs/1_75_0/libs/json/doc/html/json/quick_look.html
+
+// https://cppreference.com
+
+// http://www.cplusplus.com/reference
+
+// g++ -std=c++11 prg.cpp -o prg
+// g++ -std=c++14 prg.cpp -o prg
+// g++ -std=c++17 prg.cpp -o prg
+
+//endregion Notes
+
+//region Utility macros
+
+//==============================================================================
+//==============================================================================
+// Utility macros
+//==============================================================================
+//==============================================================================
+
+// Print debug messages only when ZZDEBUG is defined
+//#define debug_print(fmt, ...)
+//    do { if(ZZDEBUG) fprintf(stderr, fmt, __VA_ARGS__); } while (0)
+//#define dp(fmt, ...)
+//    do { if(ZZDEBUG) fprintf(stderr, fmt, __VA_ARGS__); } while (0)
+
+//#define max(a, b) \
+//   ({ __typeof__ (a) _a = (a); \
+//       __typeof__ (b) _b = (b); \
+//     _a > _b ? _a : _b; })
+
+//#define min(a, b) \
+//   ({ __typeof__ (a) _a = (a); \
+//       __typeof__ (b) _b = (b); \
+//     _a < _b ? _a : _b; })
+
+//endregion Utility macros
+
+//region Includes
+
+//==============================================================================
+//==============================================================================
+// Includes
+//==============================================================================
+//==============================================================================
+
+// #include "stdafx.h"
+
+#include <iostream>
+#include <string>
+//#include <format>
+#include <algorithm>
+#include <cassert>
+#include <utility>
+#include <fstream>
+#include <sstream>
+#include <random>
+#include <condition_variable>
+#include <chrono>
+#include <thread>
+#include <memory>
+
+#include <tuple>
+#include <vector>
+#include <list>
+#include <stack>
+#include <queue>
+#include <deque>
+#include <set>
+#include <unordered_set>
+#include <map>
+#include <unordered_map>
+
+//#include <regex>
+//#include <cassert>
+//#include <ctime>
+
+//#include <boost/timer/timer.hpp>
+//#include "boost/json/src.hpp"
+
+#include "shr.h"
+#include "other.h"
+#include "blank.h"
+#include "slpz.h"
+//#include "main.h"
+
+//#define BOOST_TEST_MODULE prg_test
+//#include <boost/test/included/unit_test.hpp>
+#include <boost/test/unit_test.hpp>
+
+//endregion Includes
+
+//region Namespace use
+
+//==============================================================================
+//==============================================================================
+// Namespace use
+//==============================================================================
+//==============================================================================
+
+using namespace std;
+
+//endregion Namespace use
+
+//region Global definitions and functions
+
+//==============================================================================
+//==============================================================================
+// Global definitions and functions
+//==============================================================================
+//==============================================================================
+
+//region Signal handling
+
+//==============================================================================
+// Signal handling
+//==============================================================================
+
+//endregion Signal handling
+
+//region Execution time
+
+//==============================================================================
+// Execution time
+//==============================================================================
+
+//endregion Execution time
+
+//region Error functions
+
+//==============================================================================
+// Error functions
+//==============================================================================
+
+//endregion Error functions
+
+//endregion Global definitions and functions
+
+//region Data definitions
+
+//==============================================================================
+//==============================================================================
+// Data definitions
+//==============================================================================
+//==============================================================================
+
+// /** Directions for movement */
+//enum gen_move_t {UP, DOWN, LEFT, RIGHT};
+
+//endregion Data definitions
+
+//region Solution
+
+//==============================================================================
+//==============================================================================
+// Solution
+//==============================================================================
+//==============================================================================
+
+/**
+ * Configuration for solution.
+ */
+
+//int sol = 0;
+
+//==============================================================================
+// Test code
+//==============================================================================
+
+// Items
+
+//==============================================================================
+
+// Random number generation
+
+// ITEM: Change rand_seed to a number > 0 for deterministic results
+//
+// After enough algorithm refinement is done, change the random seed to
+// a fixed number greater than 0. This makes the random number generator
+// deterministic and should allow the test run results to be the same.
+
+// Random number generator seed (for non-deterministic, set to 0)
+int rand_seed = 0;
+//int rand_seed = 1844;
+
+int rand_int() {
+    int num;
+
+    // int16 range [-32768,32767]
+    // int32 range [-2147483648,2147483647]
+
+    //return rand();
+
+    //static uniform_int_distribution<int> rand_dist(0, 2<<30);
+    //num = rand_dist(rng);
+    //return num;
+
+    // random numbers
+    //random_device random_device_x;
+    //default_random_engine random_engine_x(random_device_x());
+    //uniform_int_distribution<int> distribution_x(0, 99); // range [0, 99]
+    //int i = distribution_x(random_engine_x);
+    static auto rnd = []() {
+        //pair<int, int> p(make_pair(0, 99)); // integer
+        //pair<float, float> p(make_pair(0.0, 1.0)); // floating point
+        pair<int, int> p(make_pair(0, 2147483647)); // integer
+        static auto random_function_gen = [
+                // Distribution: integer, real, etc.
+                distribution = uniform_int_distribution<int>(p.first, p.second),
+                //distribution = uniform_real_distribution<float>(p.first, p.second),
+                // Random engine and seed:
+                // - random engine: default_random_engine, minstd_rand, etc.
+                // - seed: static number, random_device{}(), etc.
+                //random_engine = default_random_engine{random_device{}()}
+                //random_engine = minstd_rand(50)
+                //random_engine = default_random_engine(50)
+                //random_engine = default_random_engine(rand_seed)
+                random_engine = default_random_engine(rand_seed == 0 ?
+                        random_device{}() : rand_seed)
+        ]() mutable {
+            return distribution(random_engine);
+        };
+        return random_function_gen();
+    };
+    //float x = rnd();
+    //int x = rnd();
+    num = rnd();
+    return num;
+}
+
+//==============================================================================
+
+//endregion Solution
+
+//region Solution exec
+
+//==============================================================================
+//==============================================================================
+// Solution exec
+//==============================================================================
+//==============================================================================
+
+//==============================================================================
+// Solution unit tests
+//==============================================================================
+
+//==============================================================================
+
+// Red test
+void do_test_main_red() {
+    //int i = 1;
+    //BOOST_CHECK(i*i == 1);
+
+    // random numbers
+    //random_device random_device_x;
+    //default_random_engine random_engine_x(random_device_x());
+    //uniform_int_distribution<int> distribution_x(0, 99); // range [0, 99]
+    //int i = distribution_x(random_engine_x);
+    auto rnd = []() {
+        //pair<int, int> p(make_pair(0, 99)); // integer
+        pair<float, float> p(make_pair(0.0, 1.0)); // floating point
+        auto random_function_gen = [
+                //distribution = uniform_int_distribution<int>(p.first, p.second),
+                distribution = uniform_real_distribution<float>(p.first, p.second),
+                random_engine = default_random_engine{random_device{}()}
+        ]() mutable {
+            return distribution(random_engine);
+        };
+        return random_function_gen();
+    };
+    //float f = rnd();
+
+    //int expected_conflicts = 0;
+    //sol_t sol(0);
+    //init_sol(sol);
+    int num_conflicts;
+    //num_conflicts = sol_conflicts(sol);
+    num_conflicts = 0 * (int)rnd();
+
+    if (num_conflicts == 0) {
+        cout << "SUCCESS: red number of conflicts is 0" << endl;
+    } else {
+        cout << "ERROR: red number of conflicts is not 0, found = "
+                << num_conflicts << endl;
+    }
+    BOOST_CHECK(num_conflicts == 0);
+}
+
+//BOOST_AUTO_TEST_CASE(test_main_red) { // NOLINT
+//    do_test_main_red();
+//}
+
+//==============================================================================
+
+// Green test
+void do_test_main_green() {
+    //int i = 1;
+    //BOOST_CHECK(i*i == 1);
+
+    // random numbers
+    //random_device random_device_x;
+    //default_random_engine random_engine_x(random_device_x());
+    //uniform_int_distribution<int> distribution_x(0, 99); // range [0, 99]
+    //int i = distribution_x(random_engine_x);
+    auto rnd = []() {
+        //pair<int, int> p(make_pair(0, 99)); // integer
+        pair<float, float> p(make_pair(0.0, 1.0)); // floating point
+        auto random_function_gen = [
+                //distribution = uniform_int_distribution<int>(p.first, p.second),
+                distribution = uniform_real_distribution<float>(p.first, p.second),
+                random_engine = default_random_engine{random_device{}()}
+        ]() mutable {
+            return distribution(random_engine);
+        };
+        return random_function_gen();
+    };
+    //float f = rnd();
+
+    //int expected_conflicts = 0;
+    //sol_t sol(0);
+    //init_sol(sol);
+    int num_conflicts;
+    //num_conflicts = sol_conflicts(sol);
+    num_conflicts = 0 * (int)rnd();
+
+    if (num_conflicts == 0) {
+        cout << "SUCCESS: green number of conflicts is 0" << endl;
+    } else {
+        cout << "ERROR: green number of conflicts is not 0, found = "
+             << num_conflicts << endl;
+    }
+    BOOST_CHECK(num_conflicts == 0);
+}
+
+//BOOST_AUTO_TEST_CASE(test_main_green) { // NOLINT
+//    do_test_main_green();
+//}
+
+//==============================================================================
+
+// Blue test
+void do_test_main_blue() {
+    //int i = 1;
+    //BOOST_CHECK(i*i == 1);
+
+    // random numbers
+    //random_device random_device_x;
+    //default_random_engine random_engine_x(random_device_x());
+    //uniform_int_distribution<int> distribution_x(0, 99); // range [0, 99]
+    //int i = distribution_x(random_engine_x);
+    auto rnd = []() {
+        //pair<int, int> p(make_pair(0, 99)); // integer
+        pair<float, float> p(make_pair(0.0, 1.0)); // floating point
+        auto random_function_gen = [
+                //distribution = uniform_int_distribution<int>(p.first, p.second),
+                distribution = uniform_real_distribution<float>(p.first, p.second),
+                random_engine = default_random_engine{random_device{}()}
+        ]() mutable {
+            return distribution(random_engine);
+        };
+        return random_function_gen();
+    };
+    //float f = rnd();
+
+    //int expected_conflicts = 0;
+    //sol_t sol(0);
+    //init_sol(sol);
+    int num_conflicts;
+    //num_conflicts = sol_conflicts(sol);
+    num_conflicts = 0 * (int)rnd();
+
+    if (num_conflicts == 0) {
+        cout << "SUCCESS: blue number of conflicts is 0" << endl;
+    } else {
+        cout << "ERROR: blue number of conflicts is not 0, found = "
+             << num_conflicts << endl;
+    }
+    BOOST_CHECK(num_conflicts == 0);
+}
+
+//BOOST_AUTO_TEST_CASE(test_main_blue) { // NOLINT
+//    do_test_main_blue();
+//}
+
+//==============================================================================
+// Solution main execution
+//==============================================================================
+
+void main_exec() {
+    srand(time(NULL)); // NOLINT
+
+    //cout << "Hello" << endl;
+    cout << "begin main" << endl;
+
+    //bool isTestRun = getenv("APP_MODE_TEST_BLANK") == NULL ? false : true; // NOLINT
+
+    // Check program
+    if(false) // NOLINT
+    {
+        //do_test_main_red();
+        //do_test_main_green();
+        //do_test_main_blue();
+
+        //test_001();
+    }
+
+    if(true) { // NOLINT
+        slpz_exec();
+    }
+
+    //cout << "Bye" << endl;
+    cout << "end main" << endl;
+}
+
+//endregion Solution exec
+
+//region Other items
+
+//==============================================================================
+//==============================================================================
+// Other items
+//==============================================================================
+//==============================================================================
+
+//endregion Other items
+
+//region Other
+
+//==============================================================================
+//==============================================================================
+// Other
+//==============================================================================
+//==============================================================================
+
+//BOOST_AUTO_TEST_CASE(do_test_example_001)
+//{
+//    int i = 1;
+//    BOOST_CHECK(i*i == 1);
+//}
+
+//endregion Other
+
+//==============================================================================
+//==============================================================================
+// End
+//==============================================================================
+//==============================================================================
+
+//#pragma clang diagnostic pop
